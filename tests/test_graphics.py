@@ -1,5 +1,5 @@
 import unittest, math
-import graphics
+from twilight_mariner import graphics
 from unittest import mock
 
 

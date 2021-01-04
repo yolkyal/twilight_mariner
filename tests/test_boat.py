@@ -1,6 +1,6 @@
 import unittest
 import math
-import boat
+from twilight_mariner import boat
 from unittest import mock
 
 

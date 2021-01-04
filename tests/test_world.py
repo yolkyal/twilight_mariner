@@ -1,6 +1,6 @@
 import unittest
 import pygame
-import world
+from twilight_mariner import world
 from unittest import mock
 
 

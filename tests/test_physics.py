@@ -1,6 +1,6 @@
 import unittest
 import math
-import physics
+from twilight_mariner import physics
 from unittest import mock
 
 
