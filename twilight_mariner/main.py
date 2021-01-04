@@ -38,7 +38,7 @@ def main():
 			elif event.type in (pygame.KEYUP, pygame.KEYDOWN):
 				world = world_io_handler.handle_event(world, event)
 				
-		world = world_controller.update(world, delta_ms / 1000)
+		world = world_controller.update(world, delta_ms)
 		
 		d_surf.fill(BG_COL)
 		world_drawer.draw(d_surf, world)
