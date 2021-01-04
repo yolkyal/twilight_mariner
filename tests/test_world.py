@@ -11,12 +11,13 @@ class TestWorldController(unittest.TestCase):
 		self.world_controller = world.WorldController(self.boat_controller)
 	
 	def testUpdate(self):
-		delta = 2
+		delta_ms = 2000
+		delta_s = 2
 	
-		result_world = self.world_controller.update(self.world, delta)
+		result_world = self.world_controller.update(self.world, delta_ms)
 		
-		self.boat_controller.update.assert_called_once_with(self.world.boat, delta)
-		self.assertEqual(result_world.boat, self.boat_controller.update(self.world.boat, delta))
+		self.boat_controller.update.assert_called_once_with(self.world.boat, delta_s)
+		self.assertEqual(result_world.boat, self.boat_controller.update(self.world.boat, delta_s))
 		
 	def testRaiseBoatGear(self):
 		result_world = self.world_controller.raise_boat_gear(self.world)

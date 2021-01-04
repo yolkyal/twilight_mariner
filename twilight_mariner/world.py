@@ -11,8 +11,8 @@ class WorldController:
 	def __init__(self, boat_controller):
 		self.boat_controller = boat_controller
 		
-	def update(self, world, delta):
-		return World(world.size, self.boat_controller.update(world.boat, delta))
+	def update(self, world, delta_ms):
+		return World(world.size, self.boat_controller.update(world.boat, delta_ms / 1000))
 		
 	def raise_boat_gear(self, world):
 		return World(world.size, self.boat_controller.raise_gear(world.boat))
