@@ -57,6 +57,22 @@ class TestPhysicsObjectController(unittest.TestCase):
 	
 		self.assertEqual(resultant, result_obj)
 
+	def testGetResultantVelWithForce(self):
+		force = (1, 2) # radial
+		
+		resultant_vel = self.physics_object_controller.get_resultant_vel_with_force(self.physics_object, force)
+		expected_vel = (self.vel[0] + force[0] * math.cos(force[1]), self.vel[1] + force[0] * math.sin(force[1]))
+
+		self.assertEqual(expected_vel, resultant_vel)
+
+	def testGetResultantAngularVelWithForce(self):
+		force = 2 # scalar
+		
+		resultant_angular_vel = self.physics_object_controller.get_resultant_angular_vel_with_force(self.physics_object, force)
+		expected_angular_vel = self.angular_vel + force * self.angular_vel_force_multiplier
+
+		self.assertEqual(expected_angular_vel, resultant_angular_vel)
+
 	def testGetResultantPos(self):
 		delta = 2
 
