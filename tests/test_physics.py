@@ -56,3 +56,33 @@ class TestPhysicsObjectController(unittest.TestCase):
 		resultant = resultant.with_angle(expected_angle)
 	
 		self.assertEqual(resultant, result_obj)
+
+	def testGetResultantPos(self):
+		delta = 2
+
+		resultant_pos = self.physics_object_controller.get_resultant_pos(self.physics_object, delta)
+		expected_pos = (self.pos[0] + self.vel[0] * delta, self.pos[1] + self.vel[1] * delta)
+
+		self.assertEqual(expected_pos, resultant_pos)
+
+	def testGetResultantVel(self):
+		delta = 2
+
+		resultant_vel = self.physics_object_controller.get_resultant_vel(self.physics_object, delta)
+		expected_vel = (self.vel[0] * self.drag, self.vel[1] * self.drag)
+
+		self.assertEqual(expected_vel, resultant_vel)
+
+	def testGetResultantAngle(self):
+		delta = 2
+
+		resultant_angle = self.physics_object_controller.get_resultant_angle(self.physics_object, delta)
+		expected_angle = self.angle + self.angular_vel * delta
+
+		self.assertEqual(expected_angle, resultant_angle)
+
+	def testGetResultantAngularVel(self):
+		resultant_angular_vel = self.physics_object_controller.get_resultant_angular_vel(self.physics_object)
+		expected_angular_vel = self.angular_vel * self.drag
+
+		self.assertEqual(expected_angular_vel, resultant_angular_vel)
