@@ -16,7 +16,7 @@ class TestPhysicsObjectController(unittest.TestCase):
 		self.physics_object_controller = physics.PhysicsObjectController()
 		
 	def testApplyForce(self):
-		force = (1, 2) # radial
+		force = (1, 2) # radial - (mag, dir)
 		
 		result_obj = self.physics_object_controller.apply_force(self.physics_object, force)
 		
