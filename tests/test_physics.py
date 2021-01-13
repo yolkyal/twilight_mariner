@@ -56,3 +56,25 @@ class TestPhysicsObjectController(unittest.TestCase):
 		resultant = resultant.with_angle(expected_angle)
 	
 		self.assertEqual(resultant, result_obj)
+
+
+class TestSpringForceCalculator(unittest.TestCase):
+	def setUp(self):
+		self.strength = 2
+		self.target_length = 3
+		self.spring = physics.Spring(self.strength, self.target_length)
+		self.spring_force_calculator = physics.SpringForceCalculator()
+
+	def testGetAppliedForce(self):
+		source = (0, 0)
+		target = (5, 5)
+
+		result = self.spring_force_calculator.get_applied_force(self.spring, source, target)
+
+		diff_x = target[0] - source[0]
+		diff_y = target[1] - source[1]
+		current_length = math.sqrt(diff_x**2 + diff_y**2)
+		expected_mag = self.strength * (self.target_length - current_length)
+		expected_direction = math.atan2(diff_y, diff_x)
+
+		self.assertEqual((expected_mag, expected_direction), result)
