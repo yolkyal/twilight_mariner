@@ -34,7 +34,7 @@ class WorldDrawer:
 		self.boat_drawer = boat_drawer
 		
 	def draw(self, d_surf, world):
-		self.boat_drawer.draw(d_surf, world.boat)
+		self.boat_drawer.draw(d_surf, world.boat, world.camera)
 
 
 class WorldIOHandler:

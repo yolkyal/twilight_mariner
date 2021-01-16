@@ -60,8 +60,9 @@ class BoatDrawer:
 	def __init__(self, rot_img_drawer):
 		self.rot_img_drawer = rot_img_drawer
 
-	def draw(self, d_surf, boat):
-		self.rot_img_drawer.draw(d_surf, boat.image, boat.pos, boat.angle)
+	def draw(self, d_surf, boat, camera):
+		offset_pos = (boat.pos[0] - camera.pos[0], boat.pos[1] - camera.pos[1])
+		self.rot_img_drawer.draw(d_surf, boat.image, offset_pos, boat.angle)
 
 		
 ENGINE_SOUND_KEY = 0

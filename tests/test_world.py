@@ -53,7 +53,7 @@ class TestWorldDrawer(unittest.TestCase):
 	def testDraw(self):
 		self.world_drawer.draw(self.d_surf, self.world)
 		
-		self.boat_drawer.draw.assert_called_once_with(self.d_surf, self.world.boat)
+		self.boat_drawer.draw.assert_called_once_with(self.d_surf, self.world.boat, self.world.camera)
 		
 
 class TestWorldIOHandler(unittest.TestCase):

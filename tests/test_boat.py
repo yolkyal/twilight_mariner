@@ -81,14 +81,17 @@ class TestBoatController(unittest.TestCase):
 class TestBoatDrawer(unittest.TestCase):
 	def setUp(self):
 		self.d_surf = mock.Mock()
-		self.boat = mock.Mock()
+		self.boat = mock.Mock(pos=(1, 1))
 		self.rot_img_drawer = mock.Mock()
+		self.camera = mock.Mock(pos=(2, 2))
 		self.boat_drawer = boat.BoatDrawer(self.rot_img_drawer)
 		
 	def testDraw(self):
-		self.boat_drawer.draw(self.d_surf, self.boat)
+		self.boat_drawer.draw(self.d_surf, self.boat, self.camera)
+
+		offset_boat_pos = (self.boat.pos[0] - self.camera.pos[0], self.boat.pos[1] - self.camera.pos[1])
 		
-		self.rot_img_drawer.draw.assert_called_once_with(self.d_surf, self.boat.image, self.boat.pos, self.boat.angle)
+		self.rot_img_drawer.draw.assert_called_once_with(self.d_surf, self.boat.image, offset_boat_pos, self.boat.angle)
 		
 
 class TestBoatAudioManager(unittest.TestCase):
