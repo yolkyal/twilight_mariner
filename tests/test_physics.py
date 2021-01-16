@@ -84,10 +84,10 @@ class TestSpringController(unittest.TestCase):
 
 class TestCameraController(unittest.TestCase):
 	def setUp(self):
-		self.camera = mock.Mock()
 		self.spring = mock.Mock()
 		self.spring_controller = mock.Mock()
-		self.camera_controller = physics.CameraController(self.spring_controller, self.spring)
+		self.camera = mock.Mock(anchor_spring=self.spring)
+		self.camera_controller = physics.CameraController(self.spring_controller)
 
 	def testAnchorToPoint(self):
 		target_point = (10, 10)

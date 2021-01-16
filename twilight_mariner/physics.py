@@ -28,8 +28,9 @@ class Spring:
 
 
 class Camera(SimplePhysicsObject):
-	def __init__(self, pos):
+	def __init__(self, pos, anchor_spring):
 		super().__init__(pos)
+		self.anchor_spring = anchor_spring
 
 
 class PhysicsObjectController:
@@ -62,9 +63,8 @@ class SpringController:
 
 
 class CameraController:
-	def __init__(self, spring_controller, anchor_spring):
+	def __init__(self, spring_controller):
 		self.spring_controller = spring_controller
-		self.anchor_spring = anchor_spring
 
 	def anchor_to_point(self, camera, point):
-		return self.spring_controller.apply_force(self.anchor_spring, camera, point)
+		return self.spring_controller.apply_force(camera.anchor_spring, camera, point)
