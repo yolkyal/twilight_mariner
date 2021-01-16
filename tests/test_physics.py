@@ -80,19 +80,3 @@ class TestSpringController(unittest.TestCase):
 
 		self.physics_object_controller.apply_force.assert_called_once_with(obj, (expected_mag, expected_direction))
 		self.assertEqual(result, self.physics_object_controller.apply_force(obj, (expected_mag, expected_direction)))
-
-
-class TestCameraController(unittest.TestCase):
-	def setUp(self):
-		self.spring = mock.Mock()
-		self.spring_controller = mock.Mock()
-		self.camera = mock.Mock(anchor_spring=self.spring)
-		self.camera_controller = physics.CameraController(self.spring_controller)
-
-	def testAnchorToPoint(self):
-		target_point = (10, 10)
-
-		result = self.camera_controller.anchor_to_point(self.camera, target_point)
-
-		self.spring_controller.apply_force.assert_called_once_with(self.spring, self.camera, target_point)
-		self.assertEqual(result, self.spring_controller.apply_force(self.spring, self.camera, target_point))

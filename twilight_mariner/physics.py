@@ -27,12 +27,6 @@ class Spring:
 		self.target_length = target_length
 
 
-class Camera(SimplePhysicsObject):
-	def __init__(self, pos, anchor_spring):
-		super().__init__(pos)
-		self.anchor_spring = anchor_spring
-
-
 class PhysicsObjectController:
 	def __init__(self):
 		pass
@@ -60,11 +54,3 @@ class SpringController:
 		direction = math.atan2(diff_y, diff_x)
 
 		return self.physics_object_controller.apply_force(obj, (mag, direction))
-
-
-class CameraController:
-	def __init__(self, spring_controller):
-		self.spring_controller = spring_controller
-
-	def anchor_to_point(self, camera, point):
-		return self.spring_controller.apply_force(camera.anchor_spring, camera, point)
