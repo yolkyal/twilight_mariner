@@ -8,7 +8,8 @@ class TestWorldController(unittest.TestCase):
 	def setUp(self):
 		self.world = mock.Mock()
 		self.boat_controller = mock.Mock()
-		self.world_controller = world.WorldController(self.boat_controller)
+		self.camera_controller = mock.Mock()
+		self.world_controller = world.WorldController(self.boat_controller, self.camera_controller)
 	
 	def testUpdate(self):
 		delta_ms = 2000
@@ -17,7 +18,9 @@ class TestWorldController(unittest.TestCase):
 		result_world = self.world_controller.update(self.world, delta_ms)
 		
 		self.boat_controller.update.assert_called_once_with(self.world.boat, delta_s)
+		self.camera_controller.update.assert_called_once_with(self.world.camera, delta_s)
 		self.assertEqual(result_world.boat, self.boat_controller.update(self.world.boat, delta_s))
+		self.assertEqual(result_world.camera, self.camera_controller.update(self.world.camera, delta_s))
 		
 	def testRaiseBoatGear(self):
 		result_world = self.world_controller.raise_boat_gear(self.world)
