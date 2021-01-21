@@ -16,11 +16,13 @@ class TestWorldController(unittest.TestCase):
 		delta_s = 2
 	
 		result_world = self.world_controller.update(self.world, delta_ms)
+
+		anchored_camera = self.camera_controller.anchor_to_point(self.world.camera, self.world.boat)
 		
 		self.boat_controller.update.assert_called_once_with(self.world.boat, delta_s)
-		self.camera_controller.update.assert_called_once_with(self.world.camera, delta_s)
+		self.camera_controller.update.assert_called_once_with(anchored_camera, delta_s)
 		self.assertEqual(result_world.boat, self.boat_controller.update(self.world.boat, delta_s))
-		self.assertEqual(result_world.camera, self.camera_controller.update(self.world.camera, delta_s))
+		self.assertEqual(result_world.camera, self.camera_controller.update(anchored_camera, delta_s))
 		
 	def testRaiseBoatGear(self):
 		result_world = self.world_controller.raise_boat_gear(self.world)

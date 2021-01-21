@@ -67,16 +67,17 @@ class TestSpringController(unittest.TestCase):
 		self.spring_controller = physics.SpringController(self.physics_object_controller)
 
 	def testGetAppliedForce(self):
-		obj = mock.Mock(pos=(0, 0))
-		target_pos = (5, 5)
+		physics_obj = mock.Mock(pos=(0, 0))
+		source_pos = (1, 1)
+		target_pos = (2, 2)
 
-		result = self.spring_controller.apply_force(self.spring, obj, target_pos)
+		result = self.spring_controller.apply_force(self.spring, physics_obj, source_pos, target_pos)
 
-		diff_x = target_pos[0] - obj.pos[0]
-		diff_y = target_pos[1] - obj.pos[1]
+		diff_x = target_pos[0] - source_pos[0]
+		diff_y = target_pos[1] - source_pos[1]
 		current_length = math.sqrt(diff_x**2 + diff_y**2)
-		expected_mag = self.strength * (self.target_length - current_length)
+		expected_mag = self.strength * (current_length - self.target_length)
 		expected_direction = math.atan2(diff_y, diff_x)
 
-		self.physics_object_controller.apply_force.assert_called_once_with(obj, (expected_mag, expected_direction))
-		self.assertEqual(result, self.physics_object_controller.apply_force(obj, (expected_mag, expected_direction)))
+		self.physics_object_controller.apply_force.assert_called_once_with(physics_obj, (expected_mag, expected_direction))
+		self.assertEqual(result, self.physics_object_controller.apply_force(physics_obj, (expected_mag, expected_direction)))
