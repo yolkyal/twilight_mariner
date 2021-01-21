@@ -45,12 +45,15 @@ class SpringController:
 	def __init__(self, physics_object_controller):
 		self.physics_object_controller = physics_object_controller
 
-	def apply_force(self, spring, obj, target_pos):
-		diff_x = target_pos[0] - obj.pos[0]
-		diff_y = target_pos[1] - obj.pos[1]
+	def apply_force(self, spring, physics_obj, source_pos, target_pos):
+		diff_x = target_pos[0] - source_pos[0]
+		diff_y = target_pos[1] - source_pos[1]
 		current_length = math.sqrt(diff_x**2 + diff_y**2)
-		extension = spring.target_length - current_length
-		mag = spring.strength * extension
+		
+		extension = current_length- spring.target_length
+		magnitude = spring.strength * extension
 		direction = math.atan2(diff_y, diff_x)
 
-		return self.physics_object_controller.apply_force(obj, (mag, direction))
+		# print((obj.pos, target_pos, current_length))
+
+		return self.physics_object_controller.apply_force(physics_obj, (magnitude, direction))
