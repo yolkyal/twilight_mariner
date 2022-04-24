@@ -16,8 +16,10 @@ def main():
 	clock = pygame.time.Clock()
 
 	boat_image_id = 0
+	watery_light_id = 1
 	image_manager = ImageManager()
 	image_manager.put(boat_image_id, 'images/basic_boat.png', (48, 120))
+	image_manager.put(watery_light_id, 'images/watery_light.png', (64, 64))
 	
 	boat_start_pos = (400, 400)
 	boat_start_angle = 0
@@ -46,9 +48,8 @@ def main():
 		
 		d_surf.fill(BG_COL)
 
-		line_start = (300 - world.camera.pos[0], 300 - world.camera.pos[1])
-		line_end = (500 - world.camera.pos[0], 500 - world.camera.pos[1])
-		pygame.draw.line(d_surf, (0, 0, 0), line_start, line_end, 2)
+		light_pos = (300 - world.camera.pos[0], 300 - world.camera.pos[1])
+		d_surf.blit(image_manager.get(watery_light_id), light_pos)
 		world_drawer.draw(d_surf, world)
 		
 		pygame.display.update()
