@@ -93,19 +93,3 @@ class TestBoatDrawer(unittest.TestCase):
 		
 		self.rot_img_drawer.draw.assert_called_once_with(self.d_surf, self.boat.image, offset_boat_pos, self.boat.angle)
 		
-
-class TestBoatAudioManager(unittest.TestCase):
-	def setUp(self):
-		self.boat = mock.Mock(gear=2)
-		self.sound_manager = mock.Mock()
-		self.boat_audio_manager = boat.BoatAudioManager(self.sound_manager)
-
-	def testUpdate(self):
-		gear_engine_sound_interval = boat.GEAR_ENGINE_SOUND_INTERVAL_DIVISOR / self.boat.gear
-
-		self.boat_audio_manager.update(self.boat, gear_engine_sound_interval / 2)
-		self.sound_manager.play.assert_not_called()
-
-		self.boat_audio_manager.update(self.boat, gear_engine_sound_interval / 2)
-		self.sound_manager.play.assert_called_once_with(boat.ENGINE_SOUND_KEY)
-		

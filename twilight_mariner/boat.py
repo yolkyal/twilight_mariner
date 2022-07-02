@@ -65,21 +65,3 @@ class BoatDrawer:
 		self.rot_img_drawer.draw(d_surf, boat.image, offset_pos, boat.angle)
 
 		
-ENGINE_SOUND_KEY = 0
-GEAR_ENGINE_SOUND_INTERVAL_DIVISOR = 1
-
-
-class BoatAudioManager:
-	def __init__(self, sound_manager):
-		self.sound_manager = sound_manager
-		self.sound_last_played_map = {ENGINE_SOUND_KEY: 0}
-
-	def update(self, boat, delta):
-		if boat.gear == 0: return
-
-		engine_sound_interval = self.sound_last_played_map[ENGINE_SOUND_KEY] + delta
-		if engine_sound_interval >= GEAR_ENGINE_SOUND_INTERVAL_DIVISOR / abs(boat.gear):
-			self.sound_manager.play(ENGINE_SOUND_KEY)
-			self.sound_last_played_map[ENGINE_SOUND_KEY] = 0
-		else:
-			self.sound_last_played_map[ENGINE_SOUND_KEY] = engine_sound_interval
