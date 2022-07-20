@@ -6,7 +6,7 @@ class World:
 		self.size = size
 		self.camera = camera
 		self.boat = boat
-		
+
 
 class WorldController:
 	def __init__(self, boat_controller, camera_controller):
@@ -28,8 +28,8 @@ class WorldController:
 		
 	def turn_boat_right(self, world):
 		return World(world.size, world.camera, self.boat_controller.turn_right(world.boat))
-		
-		
+
+
 class WorldDrawer:
 	def __init__(self, boat_drawer):
 		self.boat_drawer = boat_drawer

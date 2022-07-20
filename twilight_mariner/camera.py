@@ -4,21 +4,7 @@ class Camera:
 		self.anchor_spring = anchor_spring
 		self.pos = pos
 		self.vel = vel
-		self.angle = 0
-		self.angular_vel = 0
 		self.drag = 0.95
-
-	def with_pos(self, pos):
-		return Camera(self.display_dims, self.anchor_spring, pos, self.vel)
-
-	def with_vel(self, vel):
-		return Camera(self.display_dims, self.anchor_spring, self.pos, vel)
-
-	def with_angle(self, angle):
-		return self
-
-	def with_angular_vel(self, angular_vel):
-		return self
 
 
 class CameraController:

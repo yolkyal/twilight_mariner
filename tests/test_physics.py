@@ -21,8 +21,8 @@ class TestPhysicsObjectController(unittest.TestCase):
 		result_obj = self.physics_object_controller.apply_force(self.physics_object, force)
 		
 		expected_vel = (self.vel[0] + force[0] * math.cos(force[1]), self.vel[1] + force[0] * math.sin(force[1]))
-		self.physics_object.with_vel.assert_called_once_with(expected_vel)
-		self.assertEqual(result_obj, self.physics_object.with_vel(expected_vel))
+		self.assertEqual(expected_vel, result_obj.vel)
+		self.assertEqual(self.vel, self.physics_object.vel)
 		
 	def testApplyAngularForce(self):
 		force = 2
@@ -30,8 +30,8 @@ class TestPhysicsObjectController(unittest.TestCase):
 		result_obj = self.physics_object_controller.apply_angular_force(self.physics_object, force)
 		
 		expected_angular_vel = self.angular_vel + force * self.angular_vel_force_multiplier
-		self.physics_object.with_angular_vel.assert_called_once_with(expected_angular_vel)
-		self.assertEqual(result_obj, self.physics_object.with_angular_vel(expected_angular_vel))
+		self.assertEqual(expected_angular_vel, result_obj.angular_vel)
+		self.assertEqual(self.angular_vel, self.physics_object.angular_vel)
 		
 	def testUpdate(self):
 		delta = 2
@@ -42,20 +42,16 @@ class TestPhysicsObjectController(unittest.TestCase):
 		expected_vel = (self.vel[0] * self.drag, self.vel[1] * self.drag)
 		expected_angular_vel = self.angular_vel * self.drag
 		expected_angle = self.angle + self.angular_vel * delta
-		
-		self.physics_object.with_pos.assert_called_once_with(expected_pos)
-		resultant = self.physics_object.with_pos(expected_pos)
-		
-		resultant.with_vel.assert_called_with(expected_vel)
-		resultant = resultant.with_vel(expected_vel)
-		
-		resultant.with_angular_vel.assert_called_with(expected_angular_vel)
-		resultant = resultant.with_angular_vel(expected_angular_vel)
-		
-		resultant.with_angle.assert_called_with(expected_angle)
-		resultant = resultant.with_angle(expected_angle)
 	
-		self.assertEqual(resultant, result_obj)
+		self.assertEqual(expected_pos, result_obj.pos)
+		self.assertEqual(expected_vel, result_obj.vel)
+		self.assertEqual(expected_angular_vel, result_obj.angular_vel)
+		self.assertEqual(expected_angle, result_obj.angle)
+		
+		self.assertEqual(self.pos, self.physics_object.pos)
+		self.assertEqual(self.vel, self.physics_object.vel)
+		self.assertEqual(self.angular_vel, self.physics_object.angular_vel)
+		self.assertEqual(self.angle, self.physics_object.angle)
 
 
 class TestSpringController(unittest.TestCase):

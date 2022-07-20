@@ -1,24 +1,5 @@
 import math
-
-
-class SimplePhysicsObject:
-	def __init__(self, pos):
-		self.pos = pos
-		self.vel = (0, 0)
-		self.angle = 0
-		self.angular_vel = (0, 0)
-
-	def with_pos(self, pos):
-		self.pos = pos
-
-	def with_vel(self, vel):
-		self.vel = vel
-
-	def with_angle(self, angle):
-		self.angle = angle
-
-	def with_angular_vel(self, angular_vel):
-		self.angular_vel = angular_vel
+import copy
 
 
 class Spring:
@@ -32,13 +13,23 @@ class PhysicsObjectController:
 		pass
 		
 	def apply_force(self, obj, force):
-		return obj.with_vel((obj.vel[0] + force[0] * math.cos(force[1]), obj.vel[1] + force[0] * math.sin(force[1])))
+		new_obj = copy.copy(obj)
+		new_obj.vel = (obj.vel[0] + force[0] * math.cos(force[1]), obj.vel[1] + force[0] * math.sin(force[1]))
+		return new_obj
 		
 	def apply_angular_force(self, obj, force):
-		return obj.with_angular_vel(obj.angular_vel + force * obj.angular_vel_force_multiplier)
+		new_obj = copy.copy(obj)
+		new_obj.angular_vel = obj.angular_vel + force * obj.angular_vel_force_multiplier
+		return new_obj
 		
-	def update(self, obj, delta): 
-		return obj.with_pos((obj.pos[0] + obj.vel[0] * delta, obj.pos[1] + obj.vel[1] * delta)).with_vel((obj.vel[0] * obj.drag, obj.vel[1] * obj.drag)).with_angular_vel(obj.angular_vel * obj.drag).with_angle(obj.angle + obj.angular_vel * delta)
+	def update(self, obj, delta):
+		new_obj = copy.copy(obj)
+		new_obj.pos = (obj.pos[0] + obj.vel[0] * delta, obj.pos[1] + obj.vel[1] * delta)
+		new_obj.vel = (obj.vel[0] * obj.drag, obj.vel[1] * obj.drag)
+		if hasattr(obj, 'angular_vel'):
+			new_obj.angular_vel = obj.angular_vel * obj.drag
+			new_obj.angle = obj.angle + obj.angular_vel * delta
+		return new_obj
 
 
 class SpringController:
@@ -50,10 +41,8 @@ class SpringController:
 		diff_y = target_pos[1] - source_pos[1]
 		current_length = math.sqrt(diff_x**2 + diff_y**2)
 		
-		extension = current_length- spring.target_length
+		extension = current_length - spring.target_length
 		magnitude = spring.strength * extension
 		direction = math.atan2(diff_y, diff_x)
-
-		# print((obj.pos, target_pos, current_length))
 
 		return self.physics_object_controller.apply_force(physics_obj, (magnitude, direction))
