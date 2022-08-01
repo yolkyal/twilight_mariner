@@ -1,40 +1,48 @@
 import pygame, math, sys
-from world import World, WorldDrawer, WorldController, WorldIOHandler
-from boat import Boat, BoatDrawer, BoatController
-from graphics import ImageManager, RotImgDrawer
-from physics import Spring, SpringController, PhysicsObjectController
-from camera import Camera, CameraController
-from trig import TrigCalculator
+from dependency_injector import DependencyInjector
+import world, boat, camera, graphics, physics, trig 
 
 
 BG_COL = (47,79,79)
+
+
+def inject_classes():
+	dependency_injector = DependencyInjector()
+	dependency_injector.register_modules(world, boat, camera, graphics, physics, trig)
+	dependency_injector.inject()
+	return dependency_injector
+
+
+def create_world(size, image_manager):
+	boat_start_pos = (400, 400)
+	_boat = boat.Boat(image_manager.get('BOAT_IMAGE'), image_manager.get('BOAT_TURN_SPOT'), boat_start_pos)
+
+	camera_anchor_spring = physics.Spring(0.1, 100)
+	camera_start_pos = (60, 60)
+	_camera = camera.Camera(size, camera_anchor_spring, camera_start_pos)
+
+	return world.World(size, _camera, _boat)
 
 
 def main():
 	pygame.init()
 	size = width, height = 800, 800
 	d_surf = pygame.display.set_mode(size)
-	clock = pygame.time.Clock()
+	clock = pygame.time.Clock()	
+	
+	context = inject_classes()
 
-	image_manager = ImageManager()
+	image_manager = context.get('ImageManager')
 	image_manager.put('BOAT_IMAGE', 'images/basic_boat.png', (48, 120))
 	image_manager.put('WATERY_LIGHT', 'images/watery_light.png', (64, 64))
 	image_manager.put('BOAT_TURN_SPOT', 'images/boat_turn_spot.png', (16, 16))
-	
-	boat_start_pos = (400, 400)
-	boat_start_angle = 0
-	boat_start_motor_angle = 0
-	boat = Boat(image_manager.get('BOAT_IMAGE'), boat_start_pos, (0, 0), 0, boat_start_angle, boat_start_motor_angle)
 
-	camera_anchor_spring = Spring(0.1, 100)
-	camera = Camera(size, camera_anchor_spring, (60, 60))
+	_world = create_world(size, image_manager)
 
-	world = World(size, camera, boat)
-	world_controller = WorldController(BoatController(PhysicsObjectController()), CameraController(PhysicsObjectController(), SpringController(PhysicsObjectController())))
-	world_io_handler = WorldIOHandler(world_controller)
-	
-	world_drawer = WorldDrawer(BoatDrawer(RotImgDrawer(), TrigCalculator(), image_manager.get('BOAT_TURN_SPOT')))
-	
+	world_drawer = context.get('WorldDrawer')
+	world_controller = context.get('WorldController')
+	world_io_handler = context.get('WorldIOHandler')
+
 	while True:
 		delta_ms = clock.tick(30)
 		for event in pygame.event.get():
@@ -42,15 +50,15 @@ def main():
 				pygame.quit()
 				sys.exit()
 			elif event.type in (pygame.KEYUP, pygame.KEYDOWN):
-				world = world_io_handler.handle_event(world, event)
+				_world = world_io_handler.handle_event(_world, event)
 				
-		world = world_controller.update(world, delta_ms)
+		_world = world_controller.update(_world, delta_ms)
 		
 		d_surf.fill(BG_COL)
 
-		light_pos = (300 - world.camera.pos[0], 300 - world.camera.pos[1])
+		light_pos = (300 - _world.camera.pos[0], 300 - _world.camera.pos[1])
 		d_surf.blit(image_manager.get('WATERY_LIGHT'), light_pos)
-		world_drawer.draw(d_surf, world)
+		world_drawer.draw(d_surf, _world)
 		
 		pygame.display.update()
 	
