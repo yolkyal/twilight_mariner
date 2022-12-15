@@ -14,8 +14,8 @@ class WorldController:
 		self.camera_controller = camera_controller
 		
 	def update(self, world, delta_ms):
-		camera = self.camera_controller.anchor_to_point(world.camera, world.boat.pos)
-		return World(world.size, self.camera_controller.update(camera, delta_ms / 1000), self.boat_controller.update(world.boat, delta_ms / 1000))
+		boat = self.boat_controller.update(world.boat, delta_ms / 1000)
+		return World(world.size, self.camera_controller.update(world.camera, boat), boat)
 		
 	def raise_boat_gear(self, world):
 		return World(world.size, world.camera, self.boat_controller.raise_gear(world.boat))

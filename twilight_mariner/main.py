@@ -17,9 +17,7 @@ def create_world(size, image_manager):
 	boat_start_pos = (400, 400)
 	_boat = boat.Boat(image_manager.get('BOAT_IMAGE'), image_manager.get('BOAT_TURN_SPOT'), boat_start_pos)
 
-	camera_anchor_spring = physics.Spring(0.1, 100)
-	camera_start_pos = (60, 60)
-	_camera = camera.Camera(size, camera_anchor_spring, camera_start_pos)
+	_camera = camera.Camera(size)
 
 	return world.World(size, _camera, _boat)
 
@@ -28,14 +26,14 @@ def main():
 	pygame.init()
 	size = width, height = 800, 800
 	d_surf = pygame.display.set_mode(size)
-	clock = pygame.time.Clock()	
+	clock = pygame.time.Clock()
 	
 	context = inject_classes()
 
 	image_manager = context.get('ImageManager')
 	image_manager.put('BOAT_IMAGE', 'images/basic_boat.png', (48, 120))
 	image_manager.put('WATERY_LIGHT', 'images/watery_light.png', (64, 64))
-	image_manager.put('BOAT_TURN_SPOT', 'images/boat_turn_spot.png', (16, 16))
+	image_manager.put('BOAT_TURN_SPOT', 'images/boat_turn_spot.png', (8, 8))
 
 	_world = create_world(size, image_manager)
 
