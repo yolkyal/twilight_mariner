@@ -63,7 +63,8 @@ class BoatController:
 
 
 class BoatDrawer:
-	def __init__(self, rot_img_drawer, trig_calculator):
+	def __init__(self, img_drawer, rot_img_drawer, trig_calculator):
+		self.img_drawer = img_drawer
 		self.rot_img_drawer = rot_img_drawer
 		self.trig_calculator = trig_calculator
 
@@ -78,11 +79,11 @@ class BoatDrawer:
 		if boat.turn_gear < 0:
 			for i in range(0, boat.turn_gear - 1, -1):
 				hud_point_pos = self.trig_calculator.calc_point(offset_pos, boat.angle + i * DEFAULT_TURN_SPOT_SEPARATION_DEGREE, DEFAULT_TURN_SPOT_DISTANCE)
-				self.rot_img_drawer.draw(d_surf, boat.turn_spot_image, hud_point_pos, boat.angle + i * DEFAULT_TURN_SPOT_SEPARATION_DEGREE)
+				self.img_drawer.draw(d_surf, boat.turn_spot_image, hud_point_pos)
 		elif boat.turn_gear > 0:
 			for i in range(0, boat.turn_gear + 1):
 				hud_point_pos = self.trig_calculator.calc_point(offset_pos, boat.angle + i * DEFAULT_TURN_SPOT_SEPARATION_DEGREE, DEFAULT_TURN_SPOT_DISTANCE)
-				self.rot_img_drawer.draw(d_surf, boat.turn_spot_image, hud_point_pos, boat.angle + i * DEFAULT_TURN_SPOT_SEPARATION_DEGREE)
+				self.img_drawer.draw(d_surf, boat.turn_spot_image, hud_point_pos)
 		else:
 			hud_point_pos = self.trig_calculator.calc_point(offset_pos, boat.angle, DEFAULT_TURN_SPOT_DISTANCE)
-			self.rot_img_drawer.draw(d_surf, boat.turn_spot_image, hud_point_pos, boat.angle)
+			self.img_drawer.draw(d_surf, boat.turn_spot_image, hud_point_pos)

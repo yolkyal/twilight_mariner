@@ -15,10 +15,18 @@ class ImageManager:
 		return self.images[image_id]
 
 
-class RotImgDrawer:
+class ImgDrawer:
 	def __init__(self):
 		pass
 
+	def draw(self, d_surf, image, pos):
+		d_surf.blit(image, (pos[0] - image.get_width() / 2, pos[1] - image.get_height() / 2))
+
+
+class RotImgDrawer:
+	def __init__(self, img_drawer):
+		self.img_drawer = img_drawer
+
 	def draw(self, d_surf, image, pos, angle):
 		rot_img_surf = pygame.transform.rotate(image, math.degrees(1.5 * math.pi - angle))
-		d_surf.blit(rot_img_surf, (pos[0] - rot_img_surf.get_width() / 2, pos[1] - rot_img_surf.get_height() / 2))
+		self.img_drawer.draw(d_surf, rot_img_surf, pos)

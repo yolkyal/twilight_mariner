@@ -98,9 +98,10 @@ class TestBoatDrawer(unittest.TestCase):
 
 		self.boat = mock.Mock(pos=(2, 2), angle=math.pi/4, turn_gear=1)
 
+		self.img_drawer = mock.Mock()
 		self.rot_img_drawer = mock.Mock()
 		self.trig_calculator = mock.Mock()
-		self.boat_drawer = boat.BoatDrawer(self.rot_img_drawer, self.trig_calculator)
+		self.boat_drawer = boat.BoatDrawer(self.img_drawer, self.rot_img_drawer, self.trig_calculator)
 		
 	def testDraw(self):
 		self.boat_drawer.draw(self.d_surf, self.boat, self.camera)
@@ -110,9 +111,10 @@ class TestBoatDrawer(unittest.TestCase):
 		turn_spot_pos_1 = self.trig_calculator.calc_point(offset_boat_pos, self.boat.angle, boat.DEFAULT_TURN_SPOT_DISTANCE)
 		turn_spot_pos_2 = self.trig_calculator.calc_point(offset_boat_pos, self.boat.angle + boat.DEFAULT_TURN_SPOT_SEPARATION_DEGREE, boat.DEFAULT_TURN_SPOT_DISTANCE)
 
+		self.rot_img_drawer.draw.assert_called_once_with(self.d_surf, self.boat.image, offset_boat_pos, self.boat.angle)
+
 		expected_call_args = [
-			mock.call(self.d_surf, self.boat.image, offset_boat_pos, self.boat.angle),
-			mock.call(self.d_surf, self.boat.turn_spot_image, turn_spot_pos_1, self.boat.angle),
-			mock.call(self.d_surf, self.boat.turn_spot_image, turn_spot_pos_2, self.boat.angle + boat.DEFAULT_TURN_SPOT_SEPARATION_DEGREE)
+			mock.call(self.d_surf, self.boat.turn_spot_image, turn_spot_pos_1),
+			mock.call(self.d_surf, self.boat.turn_spot_image, turn_spot_pos_2)
 		]
-		self.assertEqual(expected_call_args, self.rot_img_drawer.draw.call_args_list)
+		self.assertEqual(expected_call_args, self.img_drawer.draw.call_args_list)
