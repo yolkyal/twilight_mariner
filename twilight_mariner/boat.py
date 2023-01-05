@@ -12,10 +12,12 @@ DEFAULT_DRAG = 0.97
 DEFAULT_ANGULAR_VEL_FORCE_MULTIPLIER = math.pi / 32
 DEFAULT_TURN_SPOT_DISTANCE = 70
 DEFAULT_TURN_SPOT_SEPARATION_DEGREE = math.pi / 16
+DEFAULT_GEAR_DISPLAY_PADDING = 60
+DEFAULT_GEAR_DISPLAY_COLOUR = (225, 225, 225)
 
 
 class Boat:
-	def __init__(self, image, turn_spot_image, pos, vel=(0, 0), angle=0, angular_vel=0, motor_angle=0, gear=0, turn_gear=0):
+	def __init__(self, image, turn_spot_image, gear_font, pos, vel=(0, 0), angle=0, angular_vel=0, motor_angle=0, gear=0, turn_gear=0):
 		self.image = image
 		self.turn_spot_image = turn_spot_image
 		self.pos = pos
@@ -28,6 +30,7 @@ class Boat:
 		self.drag = DEFAULT_DRAG
 		self.angular_vel_force_multiplier = DEFAULT_ANGULAR_VEL_FORCE_MULTIPLIER
 		self.turn_spot_image = turn_spot_image
+		self.gear_font = gear_font
 
 
 class BoatController:
@@ -63,27 +66,31 @@ class BoatController:
 
 
 class BoatDrawer:
-	def __init__(self, img_drawer, rot_img_drawer, trig_calculator):
+	def __init__(self, img_drawer, rot_img_drawer, text_drawer, trig_calculator):
 		self.img_drawer = img_drawer
 		self.rot_img_drawer = rot_img_drawer
+		self.text_drawer = text_drawer
 		self.trig_calculator = trig_calculator
 
 	def draw(self, d_surf, boat, camera):
-		offset_pos = (boat.pos[0] - camera.pos[0], boat.pos[1] - camera.pos[1])
-		self.rot_img_drawer.draw(d_surf, boat.image, offset_pos, boat.angle)
-		self._draw_turn_gear_hud(d_surf, boat, camera)
+		boat_centre_pos = (boat.pos[0] - camera.pos[0], boat.pos[1] - camera.pos[1])
+		self.rot_img_drawer.draw(d_surf, boat.image, boat_centre_pos, boat.angle)
+		self._draw_turn_gear_hud(d_surf, boat, boat_centre_pos)
+		self._draw_gear_text(d_surf, boat, boat_centre_pos)
 
-	def _draw_turn_gear_hud(self, d_surf, boat, camera):
-		offset_pos = (boat.pos[0] - camera.pos[0], boat.pos[1] - camera.pos[1])
-
+	def _draw_turn_gear_hud(self, d_surf, boat, boat_centre_pos):
 		if boat.turn_gear < 0:
 			for i in range(0, boat.turn_gear - 1, -1):
-				hud_point_pos = self.trig_calculator.calc_point(offset_pos, boat.angle + i * DEFAULT_TURN_SPOT_SEPARATION_DEGREE, DEFAULT_TURN_SPOT_DISTANCE)
+				hud_point_pos = self.trig_calculator.calc_point(boat_centre_pos, boat.angle + i * DEFAULT_TURN_SPOT_SEPARATION_DEGREE, DEFAULT_TURN_SPOT_DISTANCE)
 				self.img_drawer.draw(d_surf, boat.turn_spot_image, hud_point_pos)
 		elif boat.turn_gear > 0:
 			for i in range(0, boat.turn_gear + 1):
-				hud_point_pos = self.trig_calculator.calc_point(offset_pos, boat.angle + i * DEFAULT_TURN_SPOT_SEPARATION_DEGREE, DEFAULT_TURN_SPOT_DISTANCE)
+				hud_point_pos = self.trig_calculator.calc_point(boat_centre_pos, boat.angle + i * DEFAULT_TURN_SPOT_SEPARATION_DEGREE, DEFAULT_TURN_SPOT_DISTANCE)
 				self.img_drawer.draw(d_surf, boat.turn_spot_image, hud_point_pos)
 		else:
-			hud_point_pos = self.trig_calculator.calc_point(offset_pos, boat.angle, DEFAULT_TURN_SPOT_DISTANCE)
+			hud_point_pos = self.trig_calculator.calc_point(boat_centre_pos, boat.angle, DEFAULT_TURN_SPOT_DISTANCE)
 			self.img_drawer.draw(d_surf, boat.turn_spot_image, hud_point_pos)
+
+	def _draw_gear_text(self, d_surf, boat, boat_centre_pos):
+		gear_text_pos = (boat_centre_pos[0] - DEFAULT_GEAR_DISPLAY_PADDING, boat_centre_pos[1] - DEFAULT_GEAR_DISPLAY_PADDING)
+		self.text_drawer.draw(d_surf, boat.gear_font, str(boat.gear), gear_text_pos, DEFAULT_GEAR_DISPLAY_COLOUR)

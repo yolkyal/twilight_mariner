@@ -8,12 +8,13 @@ class TestBoatController(unittest.TestCase):
 	def setUp(self):
 		self.image = mock.Mock()
 		self.turn_spot_image = mock.Mock()
+		self.gear_font = mock.Mock()
 		self.pos = (0, 0)
 		self.vel = 1
 		self.angle = math.pi / 4
 		self.gear = 1
 		self.motor_angle = boat.DEFAULT_TURN_ANGLE
-		self.boat = boat.Boat(self.image, self.turn_spot_image, self.pos, self.vel, self.angle, motor_angle=self.motor_angle, gear=self.gear)
+		self.boat = boat.Boat(self.image, self.turn_spot_image, self.gear_font, self.pos, self.vel, self.angle, motor_angle=self.motor_angle, gear=self.gear)
 		self.physics_object_controller = mock.Mock()
 		self.boat_controller = boat.BoatController(self.physics_object_controller)
 		
@@ -96,12 +97,13 @@ class TestBoatDrawer(unittest.TestCase):
 		self.d_surf = mock.Mock()
 		self.camera = mock.Mock(pos=(1, 1))
 
-		self.boat = mock.Mock(pos=(2, 2), angle=math.pi/4, turn_gear=1)
+		self.boat = mock.Mock(pos=(2, 2), angle=math.pi/4, turn_gear=1, gear=2)
 
 		self.img_drawer = mock.Mock()
 		self.rot_img_drawer = mock.Mock()
+		self.text_drawer = mock.Mock()
 		self.trig_calculator = mock.Mock()
-		self.boat_drawer = boat.BoatDrawer(self.img_drawer, self.rot_img_drawer, self.trig_calculator)
+		self.boat_drawer = boat.BoatDrawer(self.img_drawer, self.rot_img_drawer, self.text_drawer, self.trig_calculator)
 		
 	def testDraw(self):
 		self.boat_drawer.draw(self.d_surf, self.boat, self.camera)
@@ -118,3 +120,6 @@ class TestBoatDrawer(unittest.TestCase):
 			mock.call(self.d_surf, self.boat.turn_spot_image, turn_spot_pos_2)
 		]
 		self.assertEqual(expected_call_args, self.img_drawer.draw.call_args_list)
+
+		gear_text_pos =(offset_boat_pos[0] - boat.DEFAULT_GEAR_DISPLAY_PADDING, offset_boat_pos[1] - boat.DEFAULT_GEAR_DISPLAY_PADDING)
+		self.text_drawer.draw.assert_called_once_with(self.d_surf, self.boat.gear_font, str(self.boat.gear), gear_text_pos, boat.DEFAULT_GEAR_DISPLAY_COLOUR)

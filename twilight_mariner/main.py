@@ -15,7 +15,8 @@ def inject_classes():
 
 def create_world(size, image_manager):
 	boat_start_pos = (400, 400)
-	_boat = boat.Boat(image_manager.get('BOAT_IMAGE'), image_manager.get('BOAT_TURN_SPOT'), boat_start_pos)
+	boat_gear_font = pygame.font.Font("text/Blockletter.otf", 24)
+	_boat = boat.Boat(image_manager.get('BOAT_IMAGE'), image_manager.get('BOAT_TURN_SPOT'), boat_gear_font, boat_start_pos)
 
 	_camera = camera.Camera(size)
 

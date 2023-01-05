@@ -30,3 +30,12 @@ class RotImgDrawer:
 	def draw(self, d_surf, image, pos, angle):
 		rot_img_surf = pygame.transform.rotate(image, math.degrees(1.5 * math.pi - angle))
 		self.img_drawer.draw(d_surf, rot_img_surf, pos)
+
+
+class TextDrawer:
+	def __init__(self):
+		pass
+
+	def draw(self, d_surf, font, text, pos, colour):
+		rendered_text = font.render(text, False, colour)
+		d_surf.blit(rendered_text, pos)

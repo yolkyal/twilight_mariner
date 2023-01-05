@@ -36,3 +36,22 @@ class TestRotImgDrawer(unittest.TestCase):
 
 		mock_transform_rotate.assert_called_once_with(self.image, math.degrees(1.5 * math.pi - angle))
 		self.img_drawer.draw.assert_called_once_with(self.d_surf, rot_img_surf, pos)
+
+
+class TestTextDrawer(unittest.TestCase):
+	def setUp(self):
+		self.d_surf = mock.Mock()
+		self.font = mock.Mock()
+		self.text = mock.Mock()
+		self.pos = mock.Mock()
+		self.colour = mock.Mock()
+		self.text_drawer = graphics.TextDrawer()
+
+	def testDraw(self):
+		rendered_text = mock.Mock()
+		self.font.render.return_value = rendered_text
+
+		self.text_drawer.draw(self.d_surf, self.font, self.text, self.pos, self.colour)
+
+		self.font.render.assert_called_once_with(self.text, False, self.colour)
+		self.d_surf.blit.assert_called_once_with(rendered_text, self.pos)
